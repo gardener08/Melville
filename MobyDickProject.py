@@ -22,6 +22,7 @@ for line in mobyDickTextFile:
 		else:
 			wordDictionary[value] = 1
 
+'''
 superKeyList = []
 wordDictionaryKeys = wordDictionary.keys()
 for key in wordDictionaryKeys:
@@ -45,10 +46,42 @@ for word in topTenWords:
 print('Least prevalent word: ' + superKeyListSorted[0])
 
 print('Most prevalent word: ' + superKeyListSorted[18921])
+'''
+
+wordsByCount = {}
+
+# value is the count	
+for wordKey in wordDictionary.keys():
+	# is there a word with this particular count 
+	currentWord = wordKey
+	countOfCurrentWord = wordDictionary[wordKey]
+	if countOfCurrentWord in wordsByCount:
+		listOfWordsWithThisCount = wordsByCount[countOfCurrentWord]
+		listOfWordsWithThisCount.append(currentWord)
+	else:
+		listOfWordsToCreateForThisCount = []
+		listOfWordsToCreateForThisCount.append(currentWord)
+		wordsByCount[countOfCurrentWord] = listOfWordsToCreateForThisCount
+		
+wordCounts = list(wordsByCount.keys())
+wordCounts.sort(reverse=True)
+
+topTenWordCounts = wordCounts[0:10]
+
+print('Number of unique words in Moby Dick is: ' + str(len(wordDictionary)))
+
+print('Here are the top ten word counts with their words')
+for wordCount in topTenWordCounts:
+	wordsForThisCount = wordsByCount[wordCount]
+	wordsForThisCountStr = ''
+	for word in wordsForThisCount:
+		wordsForThisCountStr += word + ','
+	# Remove the trailing comma
+	wordsForThisCountStr = wordsForThisCountStr[:-1]
+	print(str(wordCount) + ': ' + wordsForThisCountStr)
 
 	
 
-
-
+	
 
 
