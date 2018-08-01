@@ -29,22 +29,25 @@ for key in wordDictionaryKeys:
 
 print('Number of words in Moby Dick is: ' + str(len(wordDictionary)))
 print('Number of words in superKeyList is: ' + str(len(superKeyList)))
-print('Example SuperKey: ' + superKeyList[10])
-print('Example SuperKey: ' + superKeyList[20])
-print('Example SuperKey: ' + superKeyList[30])
-print('Example SuperKey: ' + superKeyList[40])
-print('Example SuperKey: ' + superKeyList[41])
-print('Example SuperKey: ' + superKeyList[42])
-print('Example SuperKey: ' + superKeyList[43])
-print('Example SuperKey: ' + superKeyList[44])
-print('Example SuperKey: ' + superKeyList[45])
-print('Example SuperKey: ' + superKeyList[46])
-print('Example SuperKey: ' + superKeyList[47])
-print('Example SuperKey: ' + superKeyList[48])
-print('Example SuperKey: ' + superKeyList[49])
 
-print('Example SuperKey: ' + superKeyList[50])
-print('Example SuperKey: ' + superKeyList[60])
+# The sort function doesn't return anything but sorts the list it is given.
+superKeyListSorted = superKeyList
+superKeyListSorted.sort(key=str.lower)
+
+topTenWords = superKeyListSorted[0:10]
+for word in topTenWords:
+	wordCombo = re.split(':',word)
+	wordValue = wordCombo[1]
+	wordCount = wordCombo[0]
+	
+	print('Word ' + wordValue + ' appears ' + str(wordCount) + ' times.')
+
+print('Least prevalent word: ' + superKeyListSorted[0])
+
+print('Most prevalent word: ' + superKeyListSorted[18921])
+
+	
+
 
 
 
