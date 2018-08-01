@@ -21,7 +21,21 @@ for line in mobyDickTextFile:
 			wordDictionary[value] = wordDictionary[value] + 1
 		else:
 			wordDictionary[value] = 0
-		
+
+superKeyList = []
+wordDictionaryKeys = wordDictionary.keys()
+for key in wordDictionaryKeys:
+	superKeyList.append(str(wordDictionary[key]) + ':' + key)
+
 print('Number of words in Moby Dick is: ' + str(len(wordDictionary)))
+print('Number of words in superKeyList is: ' + str(len(superKeyList)))
+print('Example SuperKey: ' + superKeyList[10])
+print('Example SuperKey: ' + superKeyList[20])
+print('Example SuperKey: ' + superKeyList[30])
+print('Example SuperKey: ' + superKeyList[40])
+print('Example SuperKey: ' + superKeyList[50])
+print('Example SuperKey: ' + superKeyList[60])
+
+
 
 
