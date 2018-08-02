@@ -21,7 +21,7 @@ class MobyDickBusinessLogic:
 			elif re.match(commentLineRegEx, lineForAnalysisWithoutNewlineOrWhitespace):
 				continue
 			else:
-				wordsToRemove.append(lineForAnalysisWithoutNewlineOrWhitespace)
+				wordsToRemove.append(lineForAnalysisWithoutNewlineOrWhitespace.lower())
 		return wordsToRemove
 
 	def setupWordDictionary(self):
@@ -39,7 +39,8 @@ class MobyDickBusinessLogic:
 			#print(lineForAnalysisWithoutNewline + '###')
 			regEx = r'[^a-zA-Z_]'
 			lineForAnalysisWithoutNewlineOrWhitespace = lineForAnalysisWithoutNewline.rstrip()
-			brokenUpLine = re.split(regEx, lineForAnalysisWithoutNewlineOrWhitespace)
+			lineForAnalysisWithoutNewlineOrWhitespaceLowerCase = lineForAnalysisWithoutNewlineOrWhitespace.lower()
+			brokenUpLine = re.split(regEx, lineForAnalysisWithoutNewlineOrWhitespaceLowerCase)
 			
 			#print('line: ' + lineForAnalysisWithoutNewlineOrWhitespace + '###')
 			#print(brokenUpLine)
@@ -84,8 +85,8 @@ class MobyDickBusinessLogic:
 		#print('Number of unique words in Moby Dick is: ' + str(len(wordDictionary)))
 		resultsString = 'Number of unique words in Moby Dick is: ' + str(len(wordDictionary)) + '\n'
 		#print('Here are the top ten word counts with their words')
-		resultsString += 'Here are the top ten word counts with their words\n'
-		resultsString += 'A standardized list of common words is filtered out of the results\n'
+		resultsString += 'Here are the top ten word counts with their words.  The search and results are not case sensitive.\n'
+		resultsString += 'A standardized list of common words is filtered out of the results.\n'
 		for wordCount in topTenWordCounts:
 			wordsForThisCount = wordsByCount[wordCount]
 			wordsForThisCountStr = ''
