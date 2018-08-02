@@ -1,92 +1,137 @@
 # This is the Moby Dick program
 import re
+from tkinter import *
 
-def readStopWordList():
-	stopWordFile = open('StopWords.txt',encoding='utf-8')
-	wordsToRemove = []
-	for line in stopWordFile:
-		lineForAnalysisWithoutNewline = line[:-1]
-		lineForAnalysisWithoutNewlineOrWhitespace = lineForAnalysisWithoutNewline.rstrip()
+# tkinter code partially based on a tutorial at: https://pythonprogramming.net/python-3-tkinter-basics-tutorial/
+# I also used other search engine results as references for this work.
+# I used Learning Python by Mark Lutz and Regular Expression Pocket Reference by Tony Stubblebine as references as well.
 
-		commentLineRegEx = r'^#'
-		if lineForAnalysisWithoutNewlineOrWhitespace is '' or lineForAnalysisWithoutNewlineOrWhitespace is None or lineForAnalysisWithoutNewlineOrWhitespace is '\n':
-			continue
-		elif re.match(commentLineRegEx, lineForAnalysisWithoutNewlineOrWhitespace):
-			continue
-		else:
-			wordsToRemove.append(lineForAnalysisWithoutNewlineOrWhitespace)
-	return wordsToRemove
+class MobyDickBusinessLogic:
 
-def setupWordDictionary():
-	mobyDickTextFile = open('MobyDickInputFile.txt',encoding='utf-8')
-	lineCount = 0
-	wordDictionary = {}
+	def readStopWordList(self):
+		stopWordFile = open('StopWords.txt',encoding='utf-8')
+		wordsToRemove = []
+		for line in stopWordFile:
+			lineForAnalysisWithoutNewline = line[:-1]
+			lineForAnalysisWithoutNewlineOrWhitespace = lineForAnalysisWithoutNewline.rstrip()
 
-	stopWordList = readStopWordList()
-	#print(stopWordList)
-
-	for line in mobyDickTextFile:
-		lineCount = lineCount + 1
-		lineForAnalysis = str(line)
-		lineForAnalysisWithoutNewline = lineForAnalysis[:-1]
-		#print(lineForAnalysisWithoutNewline + '###')
-		regEx = r'[^a-zA-Z_]'
-		lineForAnalysisWithoutNewlineOrWhitespace = lineForAnalysisWithoutNewline.rstrip()
-		brokenUpLine = re.split(regEx, lineForAnalysisWithoutNewlineOrWhitespace)
-		
-		#print('line: ' + lineForAnalysisWithoutNewlineOrWhitespace + '###')
-		#print(brokenUpLine)
-		for value in brokenUpLine:
-			if value == '' or value is None or value is '\n':
+			commentLineRegEx = r'^#'
+			if lineForAnalysisWithoutNewlineOrWhitespace is '' or lineForAnalysisWithoutNewlineOrWhitespace is None or lineForAnalysisWithoutNewlineOrWhitespace is '\n':
 				continue
-			elif value not in stopWordList:
-				if value in wordDictionary:
-					wordDictionary[value] = wordDictionary[value] + 1
-				else:
-					wordDictionary[value] = 1
-	return wordDictionary
-				
-def getWordsByCount(wordDictionary):
-		
-	wordsByCount = {}
+			elif re.match(commentLineRegEx, lineForAnalysisWithoutNewlineOrWhitespace):
+				continue
+			else:
+				wordsToRemove.append(lineForAnalysisWithoutNewlineOrWhitespace)
+		return wordsToRemove
 
-	# value is the count	
-	for wordKey in wordDictionary.keys():
-		# is there a word with this particular count 
-		currentWord = wordKey
-		countOfCurrentWord = wordDictionary[wordKey]
-		if countOfCurrentWord in wordsByCount:
-			listOfWordsWithThisCount = wordsByCount[countOfCurrentWord]
-			listOfWordsWithThisCount.append(currentWord)
-		else:
-			listOfWordsToCreateForThisCount = []
-			listOfWordsToCreateForThisCount.append(currentWord)
-			wordsByCount[countOfCurrentWord] = listOfWordsToCreateForThisCount
+	def setupWordDictionary(self):
+		mobyDickTextFile = open('MobyDickInputFile.txt',encoding='utf-8')
+		lineCount = 0
+		wordDictionary = {}
+
+		stopWordList = self.readStopWordList()
+		#print(stopWordList)
+
+		for line in mobyDickTextFile:
+			lineCount = lineCount + 1
+			lineForAnalysis = str(line)
+			lineForAnalysisWithoutNewline = lineForAnalysis[:-1]
+			#print(lineForAnalysisWithoutNewline + '###')
+			regEx = r'[^a-zA-Z_]'
+			lineForAnalysisWithoutNewlineOrWhitespace = lineForAnalysisWithoutNewline.rstrip()
+			brokenUpLine = re.split(regEx, lineForAnalysisWithoutNewlineOrWhitespace)
 			
-	return wordsByCount
+			#print('line: ' + lineForAnalysisWithoutNewlineOrWhitespace + '###')
+			#print(brokenUpLine)
+			for value in brokenUpLine:
+				if value == '' or value is None or value is '\n':
+					continue
+				elif value not in stopWordList:
+					if value in wordDictionary:
+						wordDictionary[value] = wordDictionary[value] + 1
+					else:
+						wordDictionary[value] = 1
+		return wordDictionary
+					
+	def getWordsByCount(self,wordDictionary):
+			
+		wordsByCount = {}
 
-def getTopTenWordCounts(wordsByCount):
-	wordCounts = list(wordsByCount.keys())
-	wordCounts.sort(reverse=True)
+		# value is the count	
+		for wordKey in wordDictionary.keys():
+			# is there a word with this particular count 
+			currentWord = wordKey
+			countOfCurrentWord = wordDictionary[wordKey]
+			if countOfCurrentWord in wordsByCount:
+				listOfWordsWithThisCount = wordsByCount[countOfCurrentWord]
+				listOfWordsWithThisCount.append(currentWord)
+			else:
+				listOfWordsToCreateForThisCount = []
+				listOfWordsToCreateForThisCount.append(currentWord)
+				wordsByCount[countOfCurrentWord] = listOfWordsToCreateForThisCount
+				
+		return wordsByCount
 
-	topTenWordCounts = wordCounts[0:10]
-	return topTenWordCounts
-	
-def outputResults(wordDictionary, wordsByCount, topTenWordCounts):
-	
-	print('Number of unique words in Moby Dick is: ' + str(len(wordDictionary)))
+	def getTopTenWordCounts(self,wordsByCount):
+		wordCounts = list(wordsByCount.keys())
+		wordCounts.sort(reverse=True)
 
-	print('Here are the top ten word counts with their words')
-	for wordCount in topTenWordCounts:
-		wordsForThisCount = wordsByCount[wordCount]
-		wordsForThisCountStr = ''
-		for word in wordsForThisCount:
-			wordsForThisCountStr += word + ','
-		# Remove the trailing comma
-		wordsForThisCountStr = wordsForThisCountStr[:-1]
-		print(str(wordCount) + ': ' + wordsForThisCountStr)
+		topTenWordCounts = wordCounts[0:10]
+		return topTenWordCounts
+		
+	def outputResults(self,wordDictionary, wordsByCount, topTenWordCounts):
+		
+		#print('Number of unique words in Moby Dick is: ' + str(len(wordDictionary)))
+		resultsString = 'Number of unique words in Moby Dick is: ' + str(len(wordDictionary)) + '\n'
+		#print('Here are the top ten word counts with their words')
+		resultsString += 'Here are the top ten word counts with their words\n'
+		resultsString += 'A standardized list of common words is filtered out of the results\n'
+		for wordCount in topTenWordCounts:
+			wordsForThisCount = wordsByCount[wordCount]
+			wordsForThisCountStr = ''
+			for word in wordsForThisCount:
+				wordsForThisCountStr += word + ','
+			# Remove the trailing comma
+			wordsForThisCountStr = wordsForThisCountStr[:-1]
+			#print(str(wordCount) + ': ' + wordsForThisCountStr)
+			resultsString += str(wordCount) + ': ' + wordsForThisCountStr + '\n'
 
-wordDictionary = setupWordDictionary()
-wordsByCount = getWordsByCount(wordDictionary)
-topTenWordsByCount = getTopTenWordCounts(wordsByCount)
-outputResults(wordDictionary, wordsByCount, topTenWordsByCount)
+		return resultsString
+			
+	def runBusinessLogic(self):
+		wordDictionary = self.setupWordDictionary()
+		wordsByCount = self.getWordsByCount(wordDictionary)
+		topTenWordsByCount = self.getTopTenWordCounts(wordsByCount)
+		results = self.outputResults(wordDictionary, wordsByCount, topTenWordsByCount)
+		return results
+
+class Window(Frame):
+
+	def __init__(self, master=None):
+		Frame.__init__(self, master)               
+		self.master = master
+		
+	def initWindow(self):
+		self.master.title("Moby Dick")
+		self.pack(fill=BOTH, expand=1)
+		self.master.geometry('650x500')
+		
+		get10MostPrevalentWordsButton = Button(self, text='Get 10 most common words in Moby Dick', command=lambda: self.outputResults())
+		get10MostPrevalentWordsButton.place(x=0, y=0)
+		get10MostPrevalentWordsButton.pack()
+		#get10MostPrevalentWordsButton.pack(padx=5, pady=5, side=LEFT)
+
+		self.master.topTenText = Text(self.master, height=30, width=80)
+		self.master.topTenText.pack()
+		
+	def outputResults(self):
+		businessLogic = MobyDickBusinessLogic()
+		topTenList = businessLogic.runBusinessLogic()
+		self.master.topTenText.insert(END, topTenList)
+		
+		
+root = Tk()		
+app = Window(root)
+app.initWindow()
+root.mainloop()
+
