@@ -1,8 +1,29 @@
 # This is the Moby Dick program
 import re
+
+def readStopWordList():
+	stopWordFile = open('StopWords.txt',encoding='utf-8')
+	wordsToRemove = []
+	for line in stopWordFile:
+		lineForAnalysisWithoutNewline = line[:-1]
+		lineForAnalysisWithoutNewlineOrWhitespace = lineForAnalysisWithoutNewline.rstrip()
+
+		commentLineRegEx = r'^#'
+		if lineForAnalysisWithoutNewlineOrWhitespace is '' or lineForAnalysisWithoutNewlineOrWhitespace is None or lineForAnalysisWithoutNewlineOrWhitespace is '\n':
+			continue
+		elif re.match(commentLineRegEx, lineForAnalysisWithoutNewlineOrWhitespace):
+			continue
+		else:
+			wordsToRemove.append(lineForAnalysisWithoutNewlineOrWhitespace)
+	return wordsToRemove
+
 mobyDickTextFile = open('MobyDickInputFile.txt',encoding='utf-8')
 lineCount = 0
 wordDictionary = {}
+
+stopWordList = readStopWordList()
+#print(stopWordList)
+
 for line in mobyDickTextFile:
 	lineCount = lineCount + 1
 	lineForAnalysis = str(line)
@@ -17,36 +38,11 @@ for line in mobyDickTextFile:
 	for value in brokenUpLine:
 		if value == '' or value is None or value is '\n':
 			continue
-		elif value in wordDictionary:
-			wordDictionary[value] = wordDictionary[value] + 1
-		else:
-			wordDictionary[value] = 1
-
-'''
-superKeyList = []
-wordDictionaryKeys = wordDictionary.keys()
-for key in wordDictionaryKeys:
-	superKeyList.append(str(wordDictionary[key]) + ':' + key)
-
-print('Number of words in Moby Dick is: ' + str(len(wordDictionary)))
-print('Number of words in superKeyList is: ' + str(len(superKeyList)))
-
-# The sort function doesn't return anything but sorts the list it is given.
-superKeyListSorted = superKeyList
-superKeyListSorted.sort(key=str.lower)
-
-topTenWords = superKeyListSorted[0:10]
-for word in topTenWords:
-	wordCombo = re.split(':',word)
-	wordValue = wordCombo[1]
-	wordCount = wordCombo[0]
-	
-	print('Word ' + wordValue + ' appears ' + str(wordCount) + ' times.')
-
-print('Least prevalent word: ' + superKeyListSorted[0])
-
-print('Most prevalent word: ' + superKeyListSorted[18921])
-'''
+		elif value not in stopWordList:
+			if value in wordDictionary:
+				wordDictionary[value] = wordDictionary[value] + 1
+			else:
+				wordDictionary[value] = 1
 
 wordsByCount = {}
 
@@ -80,8 +76,18 @@ for wordCount in topTenWordCounts:
 	wordsForThisCountStr = wordsForThisCountStr[:-1]
 	print(str(wordCount) + ': ' + wordsForThisCountStr)
 
+stopWordFile = open('StopWords.txt',encoding='utf-8')
+wordsToRemove = []
+for line in stopWordFile:
+	lineForAnalysisWithoutNewline = line[:-1]
+	lineForAnalysisWithoutNewlineOrWhitespace = lineForAnalysisWithoutNewline.rstrip()
+	#lineForAnalysisWithoutWhitespace = lineForAnalysisWithoutNewline.rstrip()
+	#	print(line)
 	
-
-	
-
-
+	commentLineRegEx = r'^#'
+	if lineForAnalysisWithoutNewlineOrWhitespace is '' or lineForAnalysisWithoutNewlineOrWhitespace is None or lineForAnalysisWithoutNewlineOrWhitespace is '\n':
+		continue
+	elif re.match(commentLineRegEx, lineForAnalysisWithoutNewlineOrWhitespace):
+		continue
+	else:
+		wordsToRemove.append(lineForAnalysisWithoutNewlineOrWhitespace)
