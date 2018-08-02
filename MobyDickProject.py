@@ -1,6 +1,7 @@
 # This is the Moby Dick program
 import re
 from tkinter import *
+import tkinter.scrolledtext as tkst
 
 # tkinter code partially based on a tutorial at: https://pythonprogramming.net/python-3-tkinter-basics-tutorial/
 # I also used other search engine results as references for this work.
@@ -77,7 +78,7 @@ class MobyDickBusinessLogic:
 		wordCounts = list(wordsByCount.keys())
 		wordCounts.sort(reverse=True)
 
-		topTenWordCounts = wordCounts[0:10]
+		topTenWordCounts = wordCounts[0:100]
 		return topTenWordCounts
 		
 	def outputResults(self,wordDictionary, wordsByCount, topTenWordCounts):
@@ -85,7 +86,7 @@ class MobyDickBusinessLogic:
 		#print('Number of unique words in Moby Dick is: ' + str(len(wordDictionary)))
 		resultsString = 'Number of unique words in Moby Dick is: ' + str(len(wordDictionary)) + '\n'
 		#print('Here are the top ten word counts with their words')
-		resultsString += 'Here are the top ten word counts with their words.  The search and results are not case sensitive.\n'
+		resultsString += 'Here are the top 100 word counts with their words.  The search and results are not case sensitive.\n'
 		resultsString += 'A standardized list of common words is filtered out of the results.\n'
 		for wordCount in topTenWordCounts:
 			wordsForThisCount = wordsByCount[wordCount]
@@ -117,12 +118,18 @@ class Window(Frame):
 		self.pack(fill=BOTH, expand=1)
 		self.master.geometry('650x500')
 		
-		get10MostPrevalentWordsButton = Button(self, text='Get 10 most common words in Moby Dick', command=lambda: self.outputResults())
+		get10MostPrevalentWordsButton = Button(self, text='Get the 100 most common words in Moby Dick', command=lambda: self.outputResults())
 		get10MostPrevalentWordsButton.place(x=0, y=0)
 		get10MostPrevalentWordsButton.pack()
 		#get10MostPrevalentWordsButton.pack(padx=5, pady=5, side=LEFT)
 
-		self.master.topTenText = Text(self.master, height=30, width=80)
+		#self.master.topTenText = ScrolledText(self.master, height=30, width=80)
+		self.master.topTenText = tkst.ScrolledText(
+			master = self.master,
+			#wrap   = self.WORD,
+			width  = 80,
+			height = 30
+		)
 		self.master.topTenText.pack()
 		
 	def outputResults(self):
